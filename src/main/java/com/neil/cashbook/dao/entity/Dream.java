@@ -29,14 +29,20 @@ public class Dream {
     @Column
     private String title;
 
-    @Column
+    @Column(name = "description")
     private String desc;
 
-    @Column
-    private BigDecimal cost;
+    @Column(name = "exp_cost")
+    private BigDecimal expCost;
+
+    @Column(name = "act_cost")
+    private BigDecimal actCost;
 
     @Column(name = "come_true")
     private LocalDate comeTrue;
+
+    @Column(name = "come_true_note")
+    private String comeTrueNote;
 
     @Column
     private LocalDate deadline;

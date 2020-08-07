@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.alibaba.fastjson.JSONObject;
 import com.neil.cashbook.bo.GlobalResult;
+import com.neil.cashbook.bo.LoginBo;
 import com.neil.cashbook.dao.entity.User;
 import com.neil.cashbook.service.UserService;
 import com.neil.cashbook.service.WechatServiceImpl;
@@ -22,6 +23,7 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,17 +39,16 @@ public class UserApi {
     private UserService userService;
 
     @PostMapping("login")
-    public GlobalResult<String> login(@RequestParam(value = "code", required = false) String code) {
+    public GlobalResult<String> login(@RequestBody LoginBo loginBo) {
 
-        // JSONObject SessionKeyOpenId = wechatService.getSessionKeyOrOpenId(code);
-        // String openid = SessionKeyOpenId.getString("openid");
-        String openid = "1";
+        JSONObject SessionKeyOpenId = wechatService.getSessionKeyOrOpenId(loginBo.getCode());
+        String openid = SessionKeyOpenId.getString("openid");
         if (StringUtils.isBlank(openid)) {
-            // throw new UnauthenticatedException("微信登录失败");
+            throw new UnauthenticatedException("微信登录失败");
         }
         JwtUtil util = new JwtUtil();
         String jwtToken = util.encode(openid, 300000, new HashMap<>());
-        userService.saveUser(openid);
+        userService.saveUser(openid, loginBo.getName(), loginBo.getAvatar());
 
         // throw new UnknownAccountException("h");
         return GlobalResult.of(jwtToken);

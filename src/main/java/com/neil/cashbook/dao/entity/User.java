@@ -23,7 +23,7 @@ public class User {
     private String name;
 
     @Column
-    private String phone;
+    private String avatar;
 
     @Column(name = "open_id")
     private String openId;

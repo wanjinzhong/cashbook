@@ -9,9 +9,6 @@ import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 @Slf4j
 public class JwtAuthenticationFilter extends BasicHttpAuthenticationFilter {
 
-    private static final String TOKEN = "Authorization";
-
-
     /**
      * 如果带有 token，则对 token 进行检查，否则直接通过
      */
@@ -34,7 +31,7 @@ public class JwtAuthenticationFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         HttpServletRequest req = (HttpServletRequest) request;
-        String token = req.getHeader(TOKEN);
+        String token = req.getHeader(AUTHORIZATION_HEADER);
         return token != null;
     }
 
@@ -44,7 +41,7 @@ public class JwtAuthenticationFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String token = httpServletRequest.getHeader(TOKEN);
+        String token = httpServletRequest.getHeader(AUTHORIZATION_HEADER);
         JwtToken jwtToken = new JwtToken(token);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
         getSubject(request, response).login(jwtToken);

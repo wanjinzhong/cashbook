@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `cashbook_confirm`
+-- Table structure for table `cash_confirm`
 --
 
-DROP TABLE IF EXISTS `cashbook_confirm`;
+DROP TABLE IF EXISTS `cash_confirm`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `cashbook_confirm` (
+CREATE TABLE `cash_confirm` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `header_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -35,13 +35,13 @@ CREATE TABLE `cashbook_confirm` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `cashbook_detail`
+-- Table structure for table `cash_detail`
 --
 
-DROP TABLE IF EXISTS `cashbook_detail`;
+DROP TABLE IF EXISTS `cash_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `cashbook_detail` (
+CREATE TABLE `cash_detail` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `header_id` varchar(45) COLLATE utf8mb4_bin NOT NULL,
   `cost` decimal(7,2) NOT NULL,
@@ -55,15 +55,16 @@ CREATE TABLE `cashbook_detail` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `cashbook_header`
+-- Table structure for table `cash_header`
 --
 
-DROP TABLE IF EXISTS `cashbook_header`;
+DROP TABLE IF EXISTS `cash_header`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `cashbook_header` (
+CREATE TABLE `cash_header` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cash_date` date NOT NULL,
+  `quota` decimal(7,2) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `date_UNIQUE` (`cash_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

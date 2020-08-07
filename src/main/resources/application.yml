@@ -6,7 +6,7 @@ server:
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?verifyServerCertificate=false&useSSL=true&serverTimezone=Hongkong
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?verifyServerCertificate=false&useSSL=true&serverTimezone=Hongkong&useUnicode=true&characterEncoding=utf8
     username: ${DB_USER}
     password: ${DB_PWD}
   jpa:

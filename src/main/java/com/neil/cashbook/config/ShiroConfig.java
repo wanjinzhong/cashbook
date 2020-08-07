@@ -82,7 +82,6 @@ public class ShiroConfig {
         filters.put("jwt",new JwtAuthenticationFilter());
 
         shiroFilter.setFilters(filters);
-
         return shiroFilter;
     }
 

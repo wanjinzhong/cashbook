@@ -29,12 +29,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void saveUser(String openId) {
+    public void saveUser(String openId, String name, String avatar) {
         User user = userRepository.findByOpenId(openId);
         if (user == null) {
             user = new User();
             user.setOpenId(openId);
         }
+        user.setName(name);
+        user.setAvatar(avatar);
         userRepository.save(user);
     }
 

@@ -1,6 +1,5 @@
 package com.neil.cashbook.dao.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -15,28 +14,23 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Table(name = "cashbook_detail")
+@Table(name = "cash_confirm")
 @Entity
 @Getter
 @Setter
-public class CashbookDetail {
+public class CashConfirm {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "header_id")
-    private CashbookHeader header;
-
-    @Column
-    private BigDecimal cost;
-
-    @Column
-    private String notes;
+    private CashHeader header;
 
     @ManyToOne
-    @JoinColumn(name = "entry_id")
-    private User entryUser;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "entry_datetime")
     private LocalDateTime entryDatetime;
