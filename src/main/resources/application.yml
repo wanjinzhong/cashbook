@@ -1,0 +1,18 @@
+server:
+  servlet:
+    context-path: ${CONTEXT_PATH:/cash}
+  port: ${SERVER_PORT:8801}
+
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?verifyServerCertificate=false&useSSL=true&serverTimezone=Hongkong
+    username: ${DB_USER}
+    password: ${DB_PWD}
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    show-sql: false
+
+wx:
+  appid: ${WX_APPID}
+  appsecret: ${WX_APPSECRET}
