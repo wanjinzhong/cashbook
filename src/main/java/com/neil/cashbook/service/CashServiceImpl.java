@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,10 +17,14 @@ import com.neil.cashbook.dao.entity.CashDetail;
 import com.neil.cashbook.dao.entity.CashHeader;
 import com.neil.cashbook.dao.repository.CashDetailRepository;
 import com.neil.cashbook.dao.repository.CashHeaderRepository;
+import com.neil.cashbook.dao.repository.DreamRepository;
+import com.neil.cashbook.enums.CashType;
 import com.neil.cashbook.exception.BizException;
 import com.neil.cashbook.util.BigDecimalUtil;
+import com.neil.cashbook.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CashServiceImpl implements CashService {
@@ -36,6 +41,9 @@ public class CashServiceImpl implements CashService {
     @Autowired
     private CashDetailRepository cashDetailRepository;
 
+    @Autowired
+    private DreamRepository dreamRepository;
+
     @Override
     public void createNewCash(EditCashBo cashBo) {
         BigDecimal cost = BigDecimalUtil.toBigDecimal(cashBo.getCost());
@@ -43,7 +51,7 @@ public class CashServiceImpl implements CashService {
             throw new BizException("消费金额不正确，只接受数字");
         }
         LocalDate today = LocalDate.now();
-        CashHeader cashHeader = getCashHeader(today);
+        CashHeader cashHeader = getOrCreateHeader(today);
         BigDecimal originCost = cashHeader.getCost() == null ? BigDecimal.ZERO : cashHeader.getCost();
         cashHeader.setCost(originCost.add(cost));
         cashHeaderRepository.save(cashHeader);
@@ -57,14 +65,16 @@ public class CashServiceImpl implements CashService {
     }
 
     @Override
-    public CashHeader getCashHeader(LocalDate today) {
-        CashHeader cashHeader = cashHeaderRepository.findByCashDate(today);
+    @Transactional
+    public CashHeader getOrCreateHeader(LocalDate date) {
+        CashHeader cashHeader = cashHeaderRepository.findByCashDate(DateUtil.toDate(date));
         if (cashHeader == null) {
             cashHeader = new CashHeader();
-            cashHeader.setCashDate(Date.from(today.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+            cashHeader.setCashDate(Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
             cashHeader.setQuota(quotaService.getQuota());
+            cashHeader.setCost(BigDecimal.ZERO);
+            cashHeaderRepository.save(cashHeader);
         }
-        cashHeaderRepository.save(cashHeader);
         return cashHeader;
     }
 
@@ -79,19 +89,37 @@ public class CashServiceImpl implements CashService {
         if (date == null) {
             throw new BizException("请指定日期");
         }
-        CashHeader cashHeader = cashHeaderRepository.findByCashDate(date);
-        return cashHeader.getDetails().stream().map(detail -> {
+        CashHeader cashHeader = cashHeaderRepository.findByCashDate(DateUtil.toDate(date));
+        if (cashHeader == null) {
+            return new ArrayList<>();
+        }
+        List<CashDetailBo> cashDetails = cashHeader.getDetails().stream().map(detail -> {
             CashDetailBo cashDetailBo = new CashDetailBo();
+            cashDetailBo.setType(CashType.CASH);
             cashDetailBo.setCashDate(cashHeader.getDate());
             cashDetailBo.setCost(detail.getCost().toString());
             cashDetailBo.setDetailId(detail.getId());
             cashDetailBo.setEntryDatetime(detail.getEntryDatetime());
             cashDetailBo.setHeaderId(cashHeader.getId());
             cashDetailBo.setNote(detail.getNotes());
+            cashDetailBo.setAvatar(detail.getEntryUser().getAvatar());
             cashDetailBo.setUserName(detail.getEntryUser().getName());
             return cashDetailBo;
         }).collect(Collectors.toList());
-
+        cashDetails.addAll(dreamRepository.findByCometrue(date).stream().map(dream -> {
+            CashDetailBo cashDetailBo = new CashDetailBo();
+            cashDetailBo.setType(CashType.DREAM);
+            cashDetailBo.setCashDate(cashHeader.getDate());
+            cashDetailBo.setCost(dream.getActCost().toString());
+            cashDetailBo.setDetailId(dream.getId());
+            cashDetailBo.setEntryDatetime(dream.getEntryDatetime());
+            cashDetailBo.setHeaderId(cashHeader.getId());
+            cashDetailBo.setNote(dream.getTitle());
+            cashDetailBo.setAvatar(dream.getEntryUser().getAvatar());
+            cashDetailBo.setUserName(dream.getEntryUser().getName());
+            return cashDetailBo;
+        }).collect(Collectors.toList()));
+        return cashDetails;
     }
 
     @Override
@@ -119,7 +147,7 @@ public class CashServiceImpl implements CashService {
     @Override
     public CashBo getCashHeaderToday() {
         LocalDate today = LocalDate.now();
-        CashHeader header = cashHeaderRepository.findByCashDate(today);
+        CashHeader header = cashHeaderRepository.findByCashDate(DateUtil.toDate(today));
         if (header == null) {
             header = new CashHeader();
             header.setCashDate(Date.from(today.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));

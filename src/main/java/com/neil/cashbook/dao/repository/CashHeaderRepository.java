@@ -1,6 +1,7 @@
 package com.neil.cashbook.dao.repository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import com.neil.cashbook.dao.entity.CashHeader;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CashHeaderRepository extends JpaRepository<CashHeader, Integer> {
 
-    CashHeader findByCashDate(LocalDate date);
+    CashHeader findByCashDate(Date date);
 
     @Query("select header from CashHeader header where header.cashDate between :fromDate and :toDate order by header.cashDate desc")
     List<CashHeader> findByDateRange(@Param("fromDate") LocalDate from, @Param("toDate") LocalDate to);

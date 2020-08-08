@@ -3,6 +3,7 @@ package com.neil.cashbook.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.neil.cashbook.bo.EditQuotaBo;
 import com.neil.cashbook.dao.entity.CashHeader;
 import com.neil.cashbook.dao.entity.Setting;
 import com.neil.cashbook.dao.repository.CashHeaderRepository;
@@ -10,6 +11,7 @@ import com.neil.cashbook.dao.repository.SettingRepository;
 import com.neil.cashbook.enums.SettingKey;
 import com.neil.cashbook.exception.BizException;
 import com.neil.cashbook.util.BigDecimalUtil;
+import com.neil.cashbook.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,8 +49,8 @@ public class QuotaServiceImpl implements QuotaService {
 
     @Override
     @Transactional
-    public BigDecimal setQuota(String quotaStr) {
-        BigDecimal quota = BigDecimalUtil.toBigDecimal(quotaStr);
+    public BigDecimal setQuota(EditQuotaBo quotaBo) {
+        BigDecimal quota = BigDecimalUtil.toBigDecimal(quotaBo.getQuota());
         if (quota == null) {
             throw new BizException("每日配额不正确，只接受数字");
         }
@@ -59,7 +61,7 @@ public class QuotaServiceImpl implements QuotaService {
         }
         setting.setValue(quota.toString());
         settingRepository.save(setting);
-        CashHeader cashHeader = cashHeaderRepository.findByCashDate(LocalDate.now());
+        CashHeader cashHeader = cashHeaderRepository.findByCashDate(DateUtil.toDate(LocalDate.now()));
         if (cashHeader != null) {
             cashHeader.setQuota(quota);
             cashHeaderRepository.save(cashHeader);

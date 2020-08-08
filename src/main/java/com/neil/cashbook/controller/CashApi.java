@@ -10,6 +10,7 @@ import com.neil.cashbook.bo.GlobalResult;
 import com.neil.cashbook.bo.EditCashBo;
 import com.neil.cashbook.enums.CommonStatus;
 import com.neil.cashbook.service.CashService;
+import com.neil.cashbook.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,13 +33,13 @@ public class CashApi {
     }
 
     @GetMapping("cash")
-    public GlobalResult<List<CashDetailBo>> getCashDetailByDay(@RequestParam LocalDate date) {
-        return GlobalResult.of(cashService.getCashDetailByDay(date));
+    public GlobalResult<List<CashDetailBo>> getCashDetailByDay(@RequestParam String date) {
+        return GlobalResult.of(cashService.getCashDetailByDay(DateUtil.toDate(date)));
     }
 
     @GetMapping("cashHeader")
-    public GlobalResult<List<CashBo>> getCashHeaderByMonth(@RequestParam LocalDate date) {
-        return GlobalResult.of(cashService.getCashHeaderByMonth(date));
+    public GlobalResult<List<CashBo>> getCashHeaderByMonth(@RequestParam String date) {
+        return GlobalResult.of(cashService.getCashHeaderByMonth(DateUtil.toDate(date)));
     }
 
     @GetMapping("cashHeader/today")

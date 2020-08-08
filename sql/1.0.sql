@@ -16,25 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `cash_confirm`
---
-
-DROP TABLE IF EXISTS `cash_confirm`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `cash_confirm` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `header_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `entry_datetime` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `header_idIndex` (`header_id`),
-  KEY `user_idIndex` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `cash_detail`
 --
 
@@ -65,6 +46,7 @@ CREATE TABLE `cash_header` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cash_date` date NOT NULL,
   `quota` decimal(7,2) NOT NULL,
+  `cost` decimal(7,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `date_UNIQUE` (`cash_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
@@ -84,9 +66,10 @@ CREATE TABLE `dream` (
   `exp_cost` decimal(7,2) NOT NULL,
   `act_cost` decimal(7,2) DEFAULT NULL,
   `come_true` date DEFAULT NULL,
+  `come_true_note` varchar(2048) COLLATE utf8mb4_bin DEFAULT NULL,
   `deadline` date DEFAULT NULL,
-  `entry_id` int(11) DEFAULT NULL,
-  `enrty_datetime` datetime DEFAULT NULL,
+  `entry_id` int(11) NOT NULL,
+  `entry_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `come_trueIndex` (`come_true`),
@@ -120,8 +103,8 @@ DROP TABLE IF EXISTS `user_info`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL,
-  `phone` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL,
+  `avatar` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
   `open_id` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL,
   `session_id` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -139,4 +122,4 @@ CREATE TABLE `user_info` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-08-07 10:42:20
+-- Dump completed on 2020-08-09  1:58:24

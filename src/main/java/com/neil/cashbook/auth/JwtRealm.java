@@ -42,7 +42,7 @@ public class JwtRealm extends AuthorizingRealm {
         //判断
         JwtUtil jwtUtil = new JwtUtil();
         if (!jwtUtil.isVerify(token)) {
-            throw new UnknownAccountException();
+            throw new UnknownAccountException("请重新登录");
         }
         String openId = (String) jwtUtil.decode(token).get("sub");
         User user = userRepository.findByOpenId(openId);

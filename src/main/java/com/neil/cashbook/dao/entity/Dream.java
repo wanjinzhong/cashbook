@@ -39,7 +39,7 @@ public class Dream {
     private BigDecimal actCost;
 
     @Column(name = "come_true")
-    private LocalDate comeTrue;
+    private LocalDate cometrue;
 
     @Column(name = "come_true_note")
     private String comeTrueNote;

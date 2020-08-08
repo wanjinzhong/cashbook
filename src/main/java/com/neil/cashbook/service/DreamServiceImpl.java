@@ -58,7 +58,7 @@ public class DreamServiceImpl implements DreamService {
     @Transactional
     public void updateDream(Integer id, EditDreamBo dreamBo) {
         Dream dream = dreamRepository.findById(id).orElseThrow(() -> new BizException("心愿不存在"));
-        if (dream.getComeTrue() != null) {
+        if (dream.getCometrue() != null) {
             throw new BizException("心愿已实现，不能更改");
         }
         BigDecimal cost = BigDecimalUtil.toBigDecimal(dreamBo.getExpCost());
@@ -80,7 +80,7 @@ public class DreamServiceImpl implements DreamService {
     @Transactional
     public void comeTrue(Integer id, ComeTrueBo comeTrueBo) {
         Dream dream = dreamRepository.findById(id).orElseThrow(() -> new BizException("心愿不存在"));
-        if (dream.getComeTrue() != null) {
+        if (dream.getCometrue() != null) {
             throw new BizException("心愿已实现");
         }
         BigDecimal cost = BigDecimalUtil.toBigDecimal(comeTrueBo.getCost());
@@ -88,11 +88,11 @@ public class DreamServiceImpl implements DreamService {
             throw new BizException("预估花费不正确");
         }
         LocalDate date = comeTrueBo.getDate() == null ? LocalDate.now() : comeTrueBo.getDate();
-        dream.setComeTrue(date);
+        dream.setCometrue(date);
         dream.setComeTrueNote(comeTrueBo.getNote());
         dream.setActCost(cost);
         dreamRepository.save(dream);
-        CashHeader cashHeader = cashService.getCashHeader(date);
+        CashHeader cashHeader = cashService.getOrCreateHeader(date);
         BigDecimal originCost = cashHeader.getCost() == null ? BigDecimal.ZERO : cashHeader.getCost();
         cashHeader.setCost(originCost.add(cost));
         cashHeaderRepository.save(cashHeader);
@@ -102,16 +102,16 @@ public class DreamServiceImpl implements DreamService {
     @Transactional
     public void unComeTrue(Integer id) {
         Dream dream = dreamRepository.findById(id).orElseThrow(() -> new BizException("心愿不存在"));
-        LocalDate date = dream.getComeTrue();
+        LocalDate date = dream.getCometrue();
         if (date == null) {
             throw new BizException("心愿未实现");
         }
         BigDecimal actCost = dream.getActCost();
         dream.setActCost(null);
         dream.setComeTrueNote(null);
-        dream.setComeTrue(null);
+        dream.setCometrue(null);
         dreamRepository.save(dream);
-        CashHeader cashHeader = cashService.getCashHeader(date);
+        CashHeader cashHeader = cashService.getOrCreateHeader(date);
         BigDecimal originCost = cashHeader.getCost() == null ? BigDecimal.ZERO : cashHeader.getCost();
         cashHeader.setCost(originCost.subtract(actCost));
         cashHeaderRepository.save(cashHeader);
@@ -134,7 +134,7 @@ public class DreamServiceImpl implements DreamService {
         DreamBo dreamBo = new DreamBo();
         dreamBo.setId(dream.getId());
         dreamBo.setActCost(dream.getActCost());
-        dreamBo.setComeTrue(dream.getComeTrue());
+        dreamBo.setComeTrue(dream.getCometrue());
         dreamBo.setDeadline(dream.getDeadline());
         dreamBo.setDesc(dream.getDesc());
         dreamBo.setEntryDatetime(dream.getEntryDatetime());

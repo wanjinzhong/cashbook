@@ -7,11 +7,12 @@ import com.neil.cashbook.bo.CashBo;
 import com.neil.cashbook.bo.CashDetailBo;
 import com.neil.cashbook.bo.EditCashBo;
 import com.neil.cashbook.dao.entity.CashHeader;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface CashService {
     void createNewCash(EditCashBo cashBo);
 
-    CashHeader getCashHeader(LocalDate today);
+    CashHeader getOrCreateHeader(LocalDate date);
 
     void deleteCashDetail(Integer detailId);
 
