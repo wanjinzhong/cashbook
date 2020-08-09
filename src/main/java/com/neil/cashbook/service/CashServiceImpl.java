@@ -79,8 +79,12 @@ public class CashServiceImpl implements CashService {
     }
 
     @Override
+    @Transactional
     public void deleteCashDetail(Integer detailId) {
         CashDetail cashDetail = cashDetailRepository.findById(detailId).orElseThrow(() -> new BizException("账单不存在"));
+        CashHeader cashHeader = cashDetail.getHeader();
+        cashHeader.setCost(cashHeader.getCost().subtract(cashDetail.getCost()));
+        cashHeaderRepository.save(cashHeader);
         cashDetailRepository.delete(cashDetail);
     }
 
@@ -126,7 +130,7 @@ public class CashServiceImpl implements CashService {
     public List<CashBo> getCashHeaderByMonth(LocalDate date) {
         LocalDate from = date.with(TemporalAdjusters.firstDayOfMonth());
         LocalDate to = date.with(TemporalAdjusters.lastDayOfMonth());
-        List<CashHeader> headers = cashHeaderRepository.findByDateRange(from, to);
+        List<CashHeader> headers = cashHeaderRepository.findByDateRange(DateUtil.toDate(from), DateUtil.toDate(to));
         return headers.stream().map(this::toCashBo).collect(Collectors.toList());
     }
 

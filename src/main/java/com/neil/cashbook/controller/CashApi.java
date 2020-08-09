@@ -12,7 +12,9 @@ import com.neil.cashbook.enums.CommonStatus;
 import com.neil.cashbook.service.CashService;
 import com.neil.cashbook.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,5 +52,11 @@ public class CashApi {
     @GetMapping("remain")
     public GlobalResult<BigDecimal> getRemain() {
         return GlobalResult.of(cashService.getRemain());
+    }
+
+    @DeleteMapping("cashDetail/{detailId}")
+    public GlobalResult<CommonStatus> deleteCashDetail(@PathVariable("detailId") Integer detailId) {
+        cashService.deleteCashDetail(detailId);
+        return GlobalResult.of(CommonStatus.SUCCESS);
     }
 }

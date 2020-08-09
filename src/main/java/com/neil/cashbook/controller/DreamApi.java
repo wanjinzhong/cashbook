@@ -44,13 +44,13 @@ public class DreamApi {
     }
 
     @PutMapping("dream/{dreamId}/unComeTure")
-    public GlobalResult<CommonStatus> unComeTrue(Integer id) {
+    public GlobalResult<CommonStatus> unComeTrue(@PathVariable("dreamId") Integer id) {
         dreamService.unComeTrue(id);
         return GlobalResult.of(CommonStatus.SUCCESS);
     }
 
     @DeleteMapping("dream/{dreamId}")
-    public GlobalResult<CommonStatus> deleteDream(Integer id) {
+    public GlobalResult<CommonStatus> deleteDream(@PathVariable("dreamId") Integer id) {
         dreamService.deleteDream(id);
         return GlobalResult.of(CommonStatus.SUCCESS);
     }
