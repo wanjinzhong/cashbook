@@ -7,4 +7,5 @@ import lombok.Setter;
 public class EditCashBo {
     private String cost;
     private String notes;
+    private String date;
 }

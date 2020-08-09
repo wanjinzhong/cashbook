@@ -68,8 +68,8 @@ CREATE TABLE `dream` (
   `come_true` date DEFAULT NULL,
   `come_true_note` varchar(2048) COLLATE utf8mb4_bin DEFAULT NULL,
   `deadline` date DEFAULT NULL,
-  `entry_id` int(11) NOT NULL,
-  `entry_datetime` datetime NOT NULL,
+  `entry_id` int(11) DEFAULT NULL,
+  `entry_datetime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `come_trueIndex` (`come_true`),
@@ -122,4 +122,4 @@ CREATE TABLE `user_info` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-08-09  1:58:24
+-- Dump completed on 2020-08-10  0:44:58

@@ -50,8 +50,8 @@ public class CashServiceImpl implements CashService {
         if (cost == null) {
             throw new BizException("消费金额不正确，只接受数字");
         }
-        LocalDate today = LocalDate.now();
-        CashHeader cashHeader = getOrCreateHeader(today);
+        LocalDate date = DateUtil.toDate(cashBo.getDate());
+        CashHeader cashHeader = getOrCreateHeader(date);
         BigDecimal originCost = cashHeader.getCost() == null ? BigDecimal.ZERO : cashHeader.getCost();
         cashHeader.setCost(originCost.add(cost));
         cashHeaderRepository.save(cashHeader);
