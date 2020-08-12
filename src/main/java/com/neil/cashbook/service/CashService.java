@@ -16,7 +16,7 @@ public interface CashService {
 
     void deleteCashDetail(Integer detailId);
 
-    List<CashDetailBo> getCashDetailByDay(LocalDate date);
+    CashBo getCashByDay(LocalDate date);
 
     List<CashBo> getCashHeaderByMonth(LocalDate date);
 

@@ -2,6 +2,8 @@ package com.neil.cashbook.bo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -15,4 +17,5 @@ public class CashBo {
     private BigDecimal cost;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
+    List<CashDetailBo> cashDetail = new ArrayList<>();
 }

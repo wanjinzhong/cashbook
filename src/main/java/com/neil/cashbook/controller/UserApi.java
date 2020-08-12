@@ -47,7 +47,7 @@ public class UserApi {
             throw new UnauthenticatedException("微信登录失败");
         }
         JwtUtil util = new JwtUtil();
-        String jwtToken = util.encode(openid, 300000, new HashMap<>());
+        String jwtToken = util.encode(openid, 300000000, new HashMap<>());
         userService.saveUser(openid, loginBo.getName(), loginBo.getAvatar());
 
         // throw new UnknownAccountException("h");

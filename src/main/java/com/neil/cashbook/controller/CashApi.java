@@ -1,11 +1,9 @@
 package com.neil.cashbook.controller;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 import com.neil.cashbook.bo.CashBo;
-import com.neil.cashbook.bo.CashDetailBo;
 import com.neil.cashbook.bo.GlobalResult;
 import com.neil.cashbook.bo.EditCashBo;
 import com.neil.cashbook.enums.CommonStatus;
@@ -35,18 +33,13 @@ public class CashApi {
     }
 
     @GetMapping("cash")
-    public GlobalResult<List<CashDetailBo>> getCashDetailByDay(@RequestParam String date) {
-        return GlobalResult.of(cashService.getCashDetailByDay(DateUtil.toDate(date)));
+    public GlobalResult<CashBo> getCashDetailByDay(@RequestParam String date) {
+        return GlobalResult.of(cashService.getCashByDay(DateUtil.toDate(date)));
     }
 
     @GetMapping("cashHeader")
     public GlobalResult<List<CashBo>> getCashHeaderByMonth(@RequestParam String date) {
         return GlobalResult.of(cashService.getCashHeaderByMonth(DateUtil.toDate(date)));
-    }
-
-    @GetMapping("cashHeader/today")
-    public GlobalResult<CashBo> getCashHeaderToday() {
-        return GlobalResult.of(cashService.getCashHeaderToday());
     }
 
     @GetMapping("remain")

@@ -89,15 +89,20 @@ public class CashServiceImpl implements CashService {
     }
 
     @Override
-    public List<CashDetailBo> getCashDetailByDay(LocalDate date) {
+    public CashBo getCashByDay(LocalDate date) {
         if (date == null) {
             throw new BizException("请指定日期");
         }
         CashHeader cashHeader = cashHeaderRepository.findByCashDate(DateUtil.toDate(date));
         if (cashHeader == null) {
-            return new ArrayList<>();
+            throw new BizException("这天没有消费");
         }
-        List<CashDetailBo> cashDetails = cashHeader.getDetails().stream().map(detail -> {
+        CashBo cashBo = new CashBo();
+        cashBo.setHeaderId(cashHeader.getId());
+        cashBo.setQuota(cashHeader.getQuota());
+        cashBo.setCost(cashHeader.getCost());
+        cashBo.setDate(cashHeader.getDate());
+        cashBo.setCashDetail(cashHeader.getDetails().stream().map(detail -> {
             CashDetailBo cashDetailBo = new CashDetailBo();
             cashDetailBo.setType(CashType.CASH);
             cashDetailBo.setCashDate(cashHeader.getDate());
@@ -109,8 +114,8 @@ public class CashServiceImpl implements CashService {
             cashDetailBo.setAvatar(detail.getEntryUser().getAvatar());
             cashDetailBo.setUserName(detail.getEntryUser().getName());
             return cashDetailBo;
-        }).collect(Collectors.toList());
-        cashDetails.addAll(dreamRepository.findByCometrue(date).stream().map(dream -> {
+        }).collect(Collectors.toList()));
+        cashBo.getCashDetail().addAll(dreamRepository.findByCometrue(date).stream().map(dream -> {
             CashDetailBo cashDetailBo = new CashDetailBo();
             cashDetailBo.setType(CashType.DREAM);
             cashDetailBo.setCashDate(cashHeader.getDate());
@@ -123,7 +128,7 @@ public class CashServiceImpl implements CashService {
             cashDetailBo.setUserName(dream.getEntryUser().getName());
             return cashDetailBo;
         }).collect(Collectors.toList()));
-        return cashDetails;
+        return cashBo;
     }
 
     @Override
