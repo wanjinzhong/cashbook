@@ -2,13 +2,10 @@ package com.neil.cashbook.handler;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.neil.cashbook.bo.GlobalResult;
+import com.neil.cashbook.exception.AuthException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.ShiroException;
-import org.apache.shiro.authc.AccountException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authz.UnauthenticatedException;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,8 +21,8 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(ShiroException.class)
-    public GlobalResult<String> handle401(ShiroException e) {
+    @ExceptionHandler(AuthException.class)
+    public GlobalResult<String> handle401(AuthException e) {
         log.error("ERROR: " + e.getMessage(), e);
         GlobalResult<String> jsonEntity = new GlobalResult<>();
         jsonEntity.setStatus(401);
@@ -33,48 +30,13 @@ public class GlobalExceptionHandler {
         return jsonEntity;
     }
 
-    /**
-     * 捕捉UnauthorizedException
-     * @return
-     */
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(UnauthorizedException.class)
-    public GlobalResult<String> handle403() {
-        GlobalResult<String> jsonEntity = new GlobalResult<>();
-        jsonEntity.setStatus(403);
-        jsonEntity.setMsg("未授权");
-        return jsonEntity;
-    }
-
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(UnknownAccountException.class)
-    public GlobalResult<String> handleUnknownAccountException() {
-        GlobalResult<String> jsonEntity = new GlobalResult<>();
-        jsonEntity.setStatus(403);
-        jsonEntity.setMsg("账号异常");
-        return jsonEntity;
-    }
-
-    /**
-     * 捕捉AccountException
-     * @param e
-     * @return
-     */
-    @ResponseStatus(HttpStatus.OK)
-    @ExceptionHandler(AccountException.class)
-    public GlobalResult<String> handleAccountException(AccountException e) {
-        GlobalResult<String> jsonEntity = new GlobalResult<>();
-        jsonEntity.setStatus(401);
-        jsonEntity.setMsg(e.getMessage());
-        return jsonEntity;
-    }
-
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(UnauthenticatedException.class)
-    public GlobalResult<String> handleUnauthenticatedException() {
+    @ExceptionHandler(TokenExpiredException.class)
+    public GlobalResult<String> handleLoginExpiredException(TokenExpiredException e) {
+        log.error("ERROR: " + e.getMessage(), e);
         GlobalResult<String> jsonEntity = new GlobalResult<>();
-        jsonEntity.setStatus(401);
-        jsonEntity.setMsg("未登陆");
+        jsonEntity.setStatus(499);
+        jsonEntity.setMsg("登录过期");
         return jsonEntity;
     }
 

@@ -2,6 +2,7 @@ package com.neil.cashbook.controller;
 
 import java.util.List;
 
+import com.neil.cashbook.auth.AuthRequired;
 import com.neil.cashbook.bo.ComeTrueBo;
 import com.neil.cashbook.bo.DreamBo;
 import com.neil.cashbook.bo.EditDreamBo;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("public/api")
+@AuthRequired
 public class DreamApi {
 
     @Autowired

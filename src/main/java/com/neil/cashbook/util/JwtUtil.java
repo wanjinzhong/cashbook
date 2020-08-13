@@ -72,18 +72,17 @@ public class JwtUtil {
 
         // 得到 DefaultJwtParser
         return Jwts.parser()
-                // 设置签名的秘钥
-                .setSigningKey(base64EncodedSecretKey)
-                // 设置需要解析的 jwt
-                .parseClaimsJws(jwtToken)
-                .getBody();
+                   // 设置签名的秘钥
+                   .setSigningKey(base64EncodedSecretKey)
+                   // 设置需要解析的 jwt
+                   .parseClaimsJws(jwtToken)
+                   .getBody();
     }
 
     //判断jwtToken是否合法
     public boolean isVerify(String jwtToken) {
         //这个是官方的校验规则，这里只写了一个”校验算法“，可以自己加
         Algorithm algorithm = null;
-        // jwtToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNTk2Nzg0OTgyLCJpYXQiOjE1OTY3ODQ5NTIsImp0aSI6IjgyNWVlYWQ1LTUxMTAtNDBhOS1iMjE3LTdkMjFmNDZmYzI5NCJ9.XHEAyjFF_9ygqZYyGs_kCKV9MM6J-D65-V0PaHVfY5o";
         switch (signatureAlgorithm) {
             case HS256:
                 algorithm = Algorithm.HMAC256(Base64.decodeBase64(base64EncodedSecretKey));
@@ -92,13 +91,9 @@ public class JwtUtil {
                 throw new RuntimeException("不支持该算法");
         }
         JWTVerifier verifier = JWT.require(algorithm).build();
-        try {
-            // 校验不通过会抛出异常
-            //判断合法的标准：1. 头部和荷载部分没有篡改过。2. 没有过期
-            verifier.verify(jwtToken);
-            return true;
-        }  catch (Exception e) {
-            return false;
-        }
+        // 校验不通过会抛出异常
+        //判断合法的标准：1. 头部和荷载部分没有篡改过。2. 没有过期
+        verifier.verify(jwtToken);
+        return true;
     }
 }

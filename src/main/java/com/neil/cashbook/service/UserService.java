@@ -6,7 +6,5 @@ public interface UserService {
 
     void saveUser(String openId, String name, String avatar);
 
-    void setCurrentUser(String openId);
-
     User getCurrentUser();
 }

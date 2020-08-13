@@ -2,6 +2,7 @@ package com.neil.cashbook.controller;
 
 import java.math.BigDecimal;
 
+import com.neil.cashbook.auth.AuthRequired;
 import com.neil.cashbook.bo.EditQuotaBo;
 import com.neil.cashbook.bo.GlobalResult;
 import com.neil.cashbook.service.QuotaService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("public/api")
+@AuthRequired
 public class QuotaApi {
 
     @Autowired

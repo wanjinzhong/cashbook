@@ -3,6 +3,7 @@ package com.neil.cashbook.controller;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.neil.cashbook.auth.AuthRequired;
 import com.neil.cashbook.bo.CashBo;
 import com.neil.cashbook.bo.GlobalResult;
 import com.neil.cashbook.bo.EditCashBo;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("public/api")
+@AuthRequired
 public class CashApi {
 
     @Autowired

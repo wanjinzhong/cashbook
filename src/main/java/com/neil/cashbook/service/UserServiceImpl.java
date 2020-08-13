@@ -1,12 +1,8 @@
 package com.neil.cashbook.service;
 
-import javax.security.auth.Subject;
-
+import com.neil.cashbook.auth.WebContext;
 import com.neil.cashbook.dao.entity.User;
 import com.neil.cashbook.dao.repository.UserRepository;
-import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +13,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    private ThreadLocal<String> user = new ThreadLocal<>();
+    @Autowired
+    private WebContext webContext;
 
     @Override
     public boolean isOpenIdExist(String openId) {
@@ -41,20 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setCurrentUser(String openId) {
-        user.set(openId);
-    }
-
-    @Override
     public User getCurrentUser() {
-        String openId = user.get();
-        if (StringUtils.isBlank(openId)) {
-            throw new AuthenticationException("未登录");
-        }
-        User user = userRepository.findByOpenId(openId);
-        if (user == null) {
-            throw new AuthenticationException("账号不存在");
-        }
-        return user;
+        return webContext.getUser();
     }
 }
