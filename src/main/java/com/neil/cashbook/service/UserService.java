@@ -7,4 +7,6 @@ public interface UserService {
     void saveUser(String openId, String name, String avatar);
 
     User getCurrentUser();
+
+    void updateUserAllowEntry(String openId, boolean entry);
 }

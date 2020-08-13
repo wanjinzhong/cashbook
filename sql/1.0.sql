@@ -107,6 +107,7 @@ CREATE TABLE `user_info` (
   `avatar` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
   `open_id` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL,
   `session_id` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL,
+  `allow_entry` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `open_idIndex` (`open_id`)

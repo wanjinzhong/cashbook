@@ -35,14 +35,17 @@ public class AuthAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String token = request.getHeader("Authorization");
         if (StringUtils.isEmpty(token)) {
-            throw new BizException("未登录");
+            throw new AuthException("未登录");
         }
         JwtUtil jwtUtil = new JwtUtil();
         try {
             jwtUtil.isVerify(token);
             String openId = jwtUtil.decode(token).getSubject();
             webContext.setUser(openId);
-        } catch (TokenExpiredException e) {
+            if (!webContext.getUser().isAllowEntry()) {
+                throw new AuthException("暂无权限");
+            }
+        } catch (TokenExpiredException | AuthException e) {
             throw e;
         } catch (Exception e) {
             throw new AuthException("登录信息有误", e);

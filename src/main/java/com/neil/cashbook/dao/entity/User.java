@@ -27,4 +27,7 @@ public class User {
 
     @Column(name = "open_id")
     private String openId;
+
+    @Column(name = "allow_entry")
+    private boolean allowEntry;
 }

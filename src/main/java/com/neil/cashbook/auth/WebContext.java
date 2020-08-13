@@ -14,11 +14,15 @@ public class WebContext {
     @Autowired
     private UserRepository userRepository;
 
-    void setUser(String openId) {
+    public void setUser(String openId) {
         User user = userRepository.findByOpenId(openId);
         if (user == null) {
             throw new AuthException("用户不存在");
         }
+        localUser.set(user);
+    }
+
+    public void setUser(User user) {
         localUser.set(user);
     }
 
