@@ -29,6 +29,9 @@ public class Dream {
     @Column
     private String title;
 
+    @Column(name = "dream_owner")
+    private Integer owner;
+
     @Column(name = "description")
     private String desc;
 

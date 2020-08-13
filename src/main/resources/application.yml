@@ -16,3 +16,9 @@ spring:
 wx:
   appid: ${WX_APPID}
   appsecret: ${WX_APPSECRET}
+
+cos:
+  secretId: ${COS_SECRET_ID}
+  secretKey: ${COS_SECRET_KEY}
+  region: ${COS_REGION}
+  bucketName: ${COS_BUCKET_NAME}

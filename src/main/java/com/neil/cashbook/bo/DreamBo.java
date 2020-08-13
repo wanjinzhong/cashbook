@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class DreamBo {
     private Integer id;
+    private Integer owner;
     private String title;
     private String desc;
     private BigDecimal expCost;

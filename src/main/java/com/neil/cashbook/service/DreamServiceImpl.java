@@ -133,6 +133,7 @@ public class DreamServiceImpl implements DreamService {
     private DreamBo toDreamBo(Dream dream) {
         DreamBo dreamBo = new DreamBo();
         dreamBo.setId(dream.getId());
+        dreamBo.setOwner(dream.getOwner());
         dreamBo.setActCost(dream.getActCost());
         dreamBo.setComeTrue(dream.getCometrue());
         dreamBo.setDeadline(dream.getDeadline());

@@ -60,21 +60,22 @@ DROP TABLE IF EXISTS `dream`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dream` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(256) COLLATE utf8mb4_bin NOT NULL,
-  `description` varchar(2048) COLLATE utf8mb4_bin DEFAULT NULL,
-  `exp_cost` decimal(7,2) NOT NULL,
-  `act_cost` decimal(7,2) DEFAULT NULL,
-  `come_true` date DEFAULT NULL,
-  `come_true_note` varchar(2048) COLLATE utf8mb4_bin DEFAULT NULL,
-  `deadline` date DEFAULT NULL,
-  `entry_id` int(11) DEFAULT NULL,
-  `entry_datetime` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `come_trueIndex` (`come_true`),
-  KEY `deadlineIndex` (`deadline`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `title` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+   `dream_owner` int(11) DEFAULT NULL,
+   `description` varchar(2048) COLLATE utf8mb4_bin DEFAULT NULL,
+   `act_cost` decimal(7,2) DEFAULT NULL,
+   `exp_cost` decimal(7,2) NOT NULL,
+   `come_true_note` varchar(2048) COLLATE utf8mb4_bin DEFAULT NULL,
+   `come_true` date DEFAULT NULL,
+   `entry_id` int(11) DEFAULT NULL,
+   `entry_datetime` datetime DEFAULT NULL,
+   `deadline` date DEFAULT NULL,
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `id_UNIQUE` (`id`),
+   KEY `come_trueIndex` (`come_true`),
+   KEY `deadlineIndex` (`deadline`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -112,6 +113,17 @@ CREATE TABLE `user_info` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `open_idIndex` (`open_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+DROP TABLE IF EXISTS `dream_pic`;
+CREATE TABLE `dream_pic` (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `dream_id` int(11) NOT NULL,
+   `cos_key` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+   `cos_key_small` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `id_UNIQUE` (`id`),
+   KEY `dream_idIndex` (`dream_id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
