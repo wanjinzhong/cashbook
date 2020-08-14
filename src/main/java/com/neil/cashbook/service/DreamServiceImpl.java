@@ -62,6 +62,7 @@ public class DreamServiceImpl implements DreamService {
         dream.setEntryDatetime(LocalDateTime.now());
         dream.setEntryUser(userService.getCurrentUser());
         dream.setExpCost(cost);
+        dream.setOwner(Integer.valueOf(0).equals(dreamBo.getOwnerId()) ? null : dreamBo.getOwnerId());
         dream.setTitle(dreamBo.getTitle());
         dreamRepository.save(dream);
     }
@@ -135,10 +136,10 @@ public class DreamServiceImpl implements DreamService {
                 dreams = dreamRepository.findAll();
                 break;
             case COMPLETED:
-                dreams = dreamRepository.findByCometrueIsNotNull();
+                dreams = dreamRepository.findByComeTrueDateIsNotNull();
                 break;
             case UNCOMPLETED:
-                dreams = dreamRepository.findByCometrueIsNull();
+                dreams = dreamRepository.findByComeTrueDateIsNull();
                 break;
             default:
                 dreams = new ArrayList<>();

@@ -120,7 +120,7 @@ public class CashServiceImpl implements CashService {
             cashDetailBo.setUserName(detail.getEntryUser().getName());
             return cashDetailBo;
         }).collect(Collectors.toList()));
-        cashBo.getCashDetail().addAll(dreamRepository.findByCometrue(date).stream().map(dream -> {
+        cashBo.getCashDetail().addAll(dreamRepository.findByComeTrueDate(date).stream().map(dream -> {
             CashDetailBo cashDetailBo = new CashDetailBo();
             cashDetailBo.setType(CashType.DREAM);
             cashDetailBo.setCashDate(cashHeader.getDate());
