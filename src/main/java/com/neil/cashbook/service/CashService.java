@@ -3,6 +3,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.neil.cashbook.bo.AnalyzeBo;
 import com.neil.cashbook.bo.CashBo;
 import com.neil.cashbook.bo.CashDetailBo;
 import com.neil.cashbook.bo.EditCashBo;
@@ -19,7 +20,7 @@ public interface CashService {
 
     CashBo getCashByDay(LocalDate date);
 
-    List<CashBo> getCashHeaderByRange(CashRange cashRange, LocalDate date);
+    AnalyzeBo getCashHeaderByRange(CashRange cashRange, Integer weekAgo, LocalDate date);
 
     BigDecimal getRemain();
 

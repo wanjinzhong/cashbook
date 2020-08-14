@@ -34,8 +34,8 @@ public class Dream {
     @Column(name = "dream_owner")
     private Integer owner;
 
-    @Column(name = "description")
-    private String desc;
+    @Column(name = "notes")
+    private String notes;
 
     @Column(name = "exp_cost")
     private BigDecimal expCost;
@@ -43,11 +43,8 @@ public class Dream {
     @Column(name = "act_cost")
     private BigDecimal actCost;
 
-    @Column(name = "come_true")
-    private LocalDate cometrue;
-
-    @Column(name = "come_true_note")
-    private String comeTrueNote;
+    @Column(name = "come_true_date")
+    private LocalDate comeTrueDate;
 
     @Column
     private LocalDate deadline;

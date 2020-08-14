@@ -1,7 +1,6 @@
 package com.neil.cashbook.controller;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import com.neil.cashbook.auth.AuthRequired;
 import com.neil.cashbook.bo.CashBo;
@@ -36,7 +35,7 @@ public class CashApi {
 
     @GetMapping("cash")
     public GlobalResult<CashBo> getCashDetailByDay(@RequestParam String date) {
-        return GlobalResult.of(cashService.getCashByDay(DateUtil.toDate(date)));
+        return GlobalResult.of(cashService.getCashByDay(DateUtil.toLocalDate(date)));
     }
 
     @GetMapping("remain")

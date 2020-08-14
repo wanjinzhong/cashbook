@@ -17,6 +17,7 @@ import javax.persistence.JoinColumns;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.neil.cashbook.util.DateUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,9 +44,6 @@ public class CashHeader {
     private List<CashDetail> details = new ArrayList<>();
 
     public LocalDate getDate() {
-        if (cashDate == null) {
-            return null;
-        }
-        return cashDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return DateUtil.toLocalDate(this.cashDate);
     }
 }

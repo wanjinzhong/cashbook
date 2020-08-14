@@ -15,11 +15,11 @@ public class DreamBo {
     private Integer id;
     private Integer owner;
     private String title;
-    private String desc;
+    private String notes;
     private BigDecimal expCost;
     private BigDecimal actCost;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate comeTrue;
+    private LocalDate comeTrueDate;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
     private String entryUser;

@@ -63,11 +63,10 @@ CREATE TABLE `dream` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
    `title` varchar(256) COLLATE utf8mb4_bin NOT NULL,
    `dream_owner` int(11) DEFAULT NULL,
-   `description` varchar(2048) COLLATE utf8mb4_bin DEFAULT NULL,
+   `notes` text COLLATE utf8mb4_bin DEFAULT NULL,
    `act_cost` decimal(7,2) DEFAULT NULL,
    `exp_cost` decimal(7,2) NOT NULL,
-   `come_true_note` varchar(2048) COLLATE utf8mb4_bin DEFAULT NULL,
-   `come_true` date DEFAULT NULL,
+   `come_true_date` date DEFAULT NULL,
    `entry_id` int(11) DEFAULT NULL,
    `entry_datetime` datetime DEFAULT NULL,
    `deadline` date DEFAULT NULL,
@@ -75,7 +74,7 @@ CREATE TABLE `dream` (
    UNIQUE KEY `id_UNIQUE` (`id`),
    KEY `come_trueIndex` (`come_true`),
    KEY `deadlineIndex` (`deadline`)
- ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

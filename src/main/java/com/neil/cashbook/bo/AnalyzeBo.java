@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 public class AnalyzeBo {
     private String dateRange;
-    private BigDecimal quota;
-    private BigDecimal cost;
+    private BigDecimal quota = BigDecimal.ZERO;
+    private BigDecimal cost = BigDecimal.ZERO;
     private List<CashBo> cashes = new ArrayList<>();
 
     public String getCashAnalyze() {

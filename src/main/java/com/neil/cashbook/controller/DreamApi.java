@@ -3,7 +3,6 @@ package com.neil.cashbook.controller;
 import java.util.List;
 
 import com.neil.cashbook.auth.AuthRequired;
-import com.neil.cashbook.bo.ComeTrueBo;
 import com.neil.cashbook.bo.DreamBo;
 import com.neil.cashbook.bo.EditDreamBo;
 import com.neil.cashbook.bo.GlobalResult;
@@ -39,12 +38,6 @@ public class DreamApi {
     @PutMapping("dream/{dreamId}")
     public GlobalResult<CommonStatus> updateDream(@PathVariable("dreamId") Integer id, @RequestBody EditDreamBo dreamBo) {
         dreamService.updateDream(id, dreamBo);
-        return GlobalResult.of(CommonStatus.SUCCESS);
-    }
-
-    @PutMapping("dream/{dreamId}/comeTure")
-    public GlobalResult<CommonStatus> comeTrue(@PathVariable("dreamId") Integer id, @RequestBody ComeTrueBo comeTrueBo) {
-        dreamService.comeTrue(id, comeTrueBo);
         return GlobalResult.of(CommonStatus.SUCCESS);
     }
 

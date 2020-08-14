@@ -14,6 +14,7 @@ import lombok.Setter;
 @Setter
 public class CashBo {
     private Integer headerId;
+    private String dateRange;
     private BigDecimal quota;
     private BigDecimal cost;
     @JsonFormat(pattern = "yyyy-MM-dd")

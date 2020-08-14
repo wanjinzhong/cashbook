@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.neil.cashbook.bo.ComeTrueBo;
 import com.neil.cashbook.bo.DreamBo;
 import com.neil.cashbook.bo.DreamPicBo;
 import com.neil.cashbook.bo.EditDreamBo;
@@ -60,7 +59,6 @@ public class DreamServiceImpl implements DreamService {
         Dream dream = new Dream();
         dream.setOwner(dreamBo.getOwnerId());
         dream.setDeadline(dreamBo.getDeadline());
-        dream.setDesc(dreamBo.getDesc());
         dream.setEntryDatetime(LocalDateTime.now());
         dream.setEntryUser(userService.getCurrentUser());
         dream.setExpCost(cost);
@@ -72,9 +70,6 @@ public class DreamServiceImpl implements DreamService {
     @Transactional
     public void updateDream(Integer id, EditDreamBo dreamBo) {
         Dream dream = dreamRepository.findById(id).orElseThrow(() -> new BizException("心愿不存在"));
-        if (dream.getCometrue() != null) {
-            throw new BizException("心愿已实现，不能更改");
-        }
         BigDecimal cost = BigDecimalUtil.toBigDecimal(dreamBo.getExpCost());
         if (cost == null) {
             throw new BizException("预估花费不正确");
@@ -83,33 +78,15 @@ public class DreamServiceImpl implements DreamService {
             throw new BizException("截止时间不正确");
         }
         dream.setDeadline(dreamBo.getDeadline());
-        dream.setDesc(dreamBo.getDesc());
+        if (dreamBo.isComeTrue()) {
+            Assert.notNull(dreamBo.getComeTrueDate(), "心愿实现日期不能为空");
+            dream.setComeTrueDate(dreamBo.getComeTrueDate());
+            dream.setNotes(dreamBo.getNotes());
+        }
         dream.setEntryDatetime(LocalDateTime.now());
         dream.setEntryUser(userService.getCurrentUser());
         dream.setExpCost(cost);
         dream.setTitle(dreamBo.getTitle());
-    }
-
-    @Override
-    @Transactional
-    public void comeTrue(Integer id, ComeTrueBo comeTrueBo) {
-        Dream dream = dreamRepository.findById(id).orElseThrow(() -> new BizException("心愿不存在"));
-        if (dream.getCometrue() != null) {
-            throw new BizException("心愿已实现");
-        }
-        BigDecimal cost = BigDecimalUtil.toBigDecimal(comeTrueBo.getCost());
-        if (cost == null) {
-            throw new BizException("预估花费不正确");
-        }
-        LocalDate date = comeTrueBo.getDate() == null ? LocalDate.now() : comeTrueBo.getDate();
-        dream.setCometrue(date);
-        dream.setComeTrueNote(comeTrueBo.getNote());
-        dream.setActCost(cost);
-        dreamRepository.save(dream);
-        CashHeader cashHeader = cashService.getOrCreateHeader(date);
-        BigDecimal originCost = cashHeader.getCost() == null ? BigDecimal.ZERO : cashHeader.getCost();
-        cashHeader.setCost(originCost.add(cost));
-        cashHeaderRepository.save(cashHeader);
     }
 
     @Override
@@ -130,12 +107,12 @@ public class DreamServiceImpl implements DreamService {
     @Transactional
     public void unComeTrue(Integer id) {
         Dream dream = dreamRepository.findById(id).orElseThrow(() -> new BizException("心愿不存在"));
-        LocalDate date = dream.getCometrue();
+        LocalDate date = dream.getComeTrueDate();
         if (date == null) {
             throw new BizException("心愿未实现");
         }
         BigDecimal actCost = dream.getActCost();
-        dream.setCometrue(null);
+        dream.setComeTrueDate(null);
         dreamRepository.save(dream);
         CashHeader cashHeader = cashService.getOrCreateHeader(date);
         BigDecimal originCost = cashHeader.getCost() == null ? BigDecimal.ZERO : cashHeader.getCost();
@@ -183,9 +160,9 @@ public class DreamServiceImpl implements DreamService {
         dreamBo.setId(dream.getId());
         dreamBo.setOwner(dream.getOwner());
         dreamBo.setActCost(dream.getActCost());
-        dreamBo.setComeTrue(dream.getCometrue());
+        dreamBo.setComeTrueDate(dream.getComeTrueDate());
         dreamBo.setDeadline(dream.getDeadline());
-        dreamBo.setDesc(dream.getDesc());
+        dreamBo.setNotes(dream.getNotes());
         dreamBo.setEntryDatetime(dream.getEntryDatetime());
         dreamBo.setEntryUser(dream.getEntryUser().getName());
         dreamBo.setExpCost(dream.getExpCost());

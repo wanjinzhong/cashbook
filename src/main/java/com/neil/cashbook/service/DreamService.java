@@ -1,7 +1,6 @@
 package com.neil.cashbook.service;
 import java.util.List;
 
-import com.neil.cashbook.bo.ComeTrueBo;
 import com.neil.cashbook.bo.DreamBo;
 import com.neil.cashbook.bo.EditDreamBo;
 import com.neil.cashbook.enums.DreamType;
@@ -12,8 +11,6 @@ public interface DreamService {
     void createNewDream(EditDreamBo dreamBo);
 
     void updateDream(Integer id, EditDreamBo dreamBo);
-
-    void comeTrue(Integer id, ComeTrueBo comeTrueBo);
 
     @Transactional
     Integer uploadPic(Integer id, MultipartFile file);
