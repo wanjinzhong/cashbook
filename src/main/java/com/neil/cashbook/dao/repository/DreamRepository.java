@@ -10,4 +10,8 @@ import org.springframework.stereotype.Repository;
 public interface DreamRepository extends JpaRepository<Dream, Integer> {
 
     List<Dream> findByCometrue(LocalDate comeTrue);
+
+    List<Dream> findByCometrueIsNull();
+
+    List<Dream> findByCometrueIsNotNull();
 }

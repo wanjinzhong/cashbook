@@ -13,4 +13,5 @@ public class EditDreamBo {
     private String expCost;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
+    private Integer ownerId;
 }

@@ -2,6 +2,8 @@ package com.neil.cashbook.bo;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -23,5 +25,6 @@ public class DreamBo {
     private String entryUser;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime entryDatetime;
+    private List<DreamPicBo> pics = new ArrayList<>();
 
 }

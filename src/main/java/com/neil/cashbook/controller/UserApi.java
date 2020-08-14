@@ -1,15 +1,16 @@
 package com.neil.cashbook.controller;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.neil.cashbook.auth.AuthRequired;
 import com.neil.cashbook.bo.GlobalResult;
 import com.neil.cashbook.bo.LoginBo;
+import com.neil.cashbook.bo.UserBo;
 import com.neil.cashbook.dao.entity.User;
 import com.neil.cashbook.enums.CommonStatus;
 import com.neil.cashbook.exception.AuthException;
-import com.neil.cashbook.exception.BizException;
 import com.neil.cashbook.service.UserService;
 import com.neil.cashbook.service.WechatServiceImpl;
 import com.neil.cashbook.util.JwtUtil;
@@ -36,12 +37,11 @@ public class UserApi {
 
     @PostMapping("login")
     public GlobalResult<String> login(@RequestBody LoginBo loginBo) {
-        // JSONObject SessionKeyOpenId = wechatService.getSessionKeyOrOpenId(loginBo.getCode());
-        // String openid = SessionKeyOpenId.getString("openid");
-        // if (StringUtils.isBlank(openid)) {
-        //     throw new AuthException("微信登录失败");
-        // }
-        String openid = "abc123";
+        JSONObject SessionKeyOpenId = wechatService.getSessionKeyOrOpenId(loginBo.getCode());
+        String openid = SessionKeyOpenId.getString("openid");
+        if (StringUtils.isBlank(openid)) {
+            throw new AuthException("微信登录失败");
+        }
         JwtUtil util = new JwtUtil();
         String jwtToken = util.encode(openid, 1000 * 60 * 60, new HashMap<>());
         userService.saveUser(openid, loginBo.getName(), loginBo.getAvatar());
@@ -59,5 +59,11 @@ public class UserApi {
     public GlobalResult<CommonStatus> updateUserEntry(@PathVariable("openId") String openId, @RequestParam("entry") boolean entry) {
         userService.updateUserAllowEntry(openId, entry);
         return GlobalResult.of(CommonStatus.SUCCESS);
+    }
+
+    @GetMapping("users")
+    @AuthRequired
+    public GlobalResult<List<UserBo>> getUsers() {
+        return GlobalResult.of(userService.getUsers());
     }
 }

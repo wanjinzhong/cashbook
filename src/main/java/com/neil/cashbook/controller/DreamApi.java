@@ -8,6 +8,7 @@ import com.neil.cashbook.bo.DreamBo;
 import com.neil.cashbook.bo.EditDreamBo;
 import com.neil.cashbook.bo.GlobalResult;
 import com.neil.cashbook.enums.CommonStatus;
+import com.neil.cashbook.enums.DreamType;
 import com.neil.cashbook.service.DreamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("public/api")
@@ -58,7 +61,17 @@ public class DreamApi {
     }
 
     @GetMapping("dream")
-    public GlobalResult<List<DreamBo>> getDreams() {
-        return GlobalResult.of(dreamService.getDreams());
+    public GlobalResult<List<DreamBo>> getDreams(@RequestParam("type") DreamType type) {
+        return GlobalResult.of(dreamService.getDreams(type));
+    }
+
+    @PostMapping("dream/{dreamId}/pic")
+    public GlobalResult<Integer> uploadDreamPic(MultipartFile file, @PathVariable(name = "dreamId") Integer dreamId) {
+        return GlobalResult.of(dreamService.uploadPic(dreamId, file));
+    }
+
+    @DeleteMapping("dream/pic/{picId}")
+    public void deleteDreamPic(@PathVariable(name = "picId") Integer picId) {
+        dreamService.deletePic(picId);
     }
 }

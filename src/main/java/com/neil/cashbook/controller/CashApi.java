@@ -39,11 +39,6 @@ public class CashApi {
         return GlobalResult.of(cashService.getCashByDay(DateUtil.toDate(date)));
     }
 
-    @GetMapping("cashHeader")
-    public GlobalResult<List<CashBo>> getCashHeaderByMonth(@RequestParam String date) {
-        return GlobalResult.of(cashService.getCashHeaderByMonth(DateUtil.toDate(date)));
-    }
-
     @GetMapping("remain")
     public GlobalResult<BigDecimal> getRemain() {
         return GlobalResult.of(cashService.getRemain());

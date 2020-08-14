@@ -32,8 +32,8 @@ public class CosServiceImpl implements CosService {
             throw new BizException("文件名不能为空");
         }
         GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, key, HttpMethodName.GET);
-        Date expirationDate = new Date(System.currentTimeMillis() + 5L * 60L * 1000L);
-        request.setExpiration(expirationDate);
+        // Date expirationDate = new Date(System.currentTimeMillis() + 5L * 60L * 1000L);
+        // request.setExpiration(expirationDate);
         URL url = cosClient.generatePresignedUrl(request);
         return url.toString();
     }

@@ -7,6 +7,7 @@ import com.neil.cashbook.bo.CashBo;
 import com.neil.cashbook.bo.CashDetailBo;
 import com.neil.cashbook.bo.EditCashBo;
 import com.neil.cashbook.dao.entity.CashHeader;
+import com.neil.cashbook.enums.CashRange;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface CashService {
@@ -18,7 +19,7 @@ public interface CashService {
 
     CashBo getCashByDay(LocalDate date);
 
-    List<CashBo> getCashHeaderByMonth(LocalDate date);
+    List<CashBo> getCashHeaderByRange(CashRange cashRange, LocalDate date);
 
     BigDecimal getRemain();
 

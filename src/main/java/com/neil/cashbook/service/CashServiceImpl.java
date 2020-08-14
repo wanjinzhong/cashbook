@@ -18,6 +18,7 @@ import com.neil.cashbook.dao.entity.CashHeader;
 import com.neil.cashbook.dao.repository.CashDetailRepository;
 import com.neil.cashbook.dao.repository.CashHeaderRepository;
 import com.neil.cashbook.dao.repository.DreamRepository;
+import com.neil.cashbook.enums.CashRange;
 import com.neil.cashbook.enums.CashType;
 import com.neil.cashbook.exception.BizException;
 import com.neil.cashbook.util.BigDecimalUtil;
@@ -132,7 +133,7 @@ public class CashServiceImpl implements CashService {
     }
 
     @Override
-    public List<CashBo> getCashHeaderByMonth(LocalDate date) {
+    public List<CashBo> getCashHeaderByRange(CashRange range, LocalDate date) {
         LocalDate from = date.with(TemporalAdjusters.firstDayOfMonth());
         LocalDate to = date.with(TemporalAdjusters.lastDayOfMonth());
         List<CashHeader> headers = cashHeaderRepository.findByDateRange(DateUtil.toDate(from), DateUtil.toDate(to));

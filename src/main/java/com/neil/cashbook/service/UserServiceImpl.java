@@ -1,6 +1,12 @@
 package com.neil.cashbook.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import com.neil.cashbook.auth.WebContext;
+import com.neil.cashbook.bo.UserBo;
 import com.neil.cashbook.dao.entity.User;
 import com.neil.cashbook.dao.repository.UserRepository;
 import com.neil.cashbook.exception.BizException;
@@ -55,5 +61,20 @@ public class UserServiceImpl implements UserService {
         }
         user.setAllowEntry(entry);
         userRepository.save(user);
+    }
+
+    @Override
+    public List<UserBo> getUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(this::toUserBo).collect(Collectors.toList());
+    }
+
+    private UserBo toUserBo(User user) {
+        UserBo userBo = new UserBo();
+        userBo.setOpenId(user.getOpenId());
+        userBo.setName(user.getName());
+        userBo.setAvatar(user.getAvatar());
+        userBo.setAllowEntry(user.isAllowEntry());
+        return userBo;
     }
 }

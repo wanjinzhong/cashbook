@@ -4,6 +4,9 @@ import java.util.List;
 import com.neil.cashbook.bo.ComeTrueBo;
 import com.neil.cashbook.bo.DreamBo;
 import com.neil.cashbook.bo.EditDreamBo;
+import com.neil.cashbook.enums.DreamType;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface DreamService {
     void createNewDream(EditDreamBo dreamBo);
@@ -12,9 +15,14 @@ public interface DreamService {
 
     void comeTrue(Integer id, ComeTrueBo comeTrueBo);
 
+    @Transactional
+    Integer uploadPic(Integer id, MultipartFile file);
+
     void unComeTrue(Integer id);
 
     void deleteDream(Integer id);
 
-    List<DreamBo> getDreams();
+    List<DreamBo> getDreams(DreamType type);
+
+    void deletePic(Integer picId);
 }
