@@ -58,6 +58,11 @@ public class DreamApi {
         return GlobalResult.of(dreamService.getDreams(type));
     }
 
+    @GetMapping("dream/{dreamId}")
+    public GlobalResult<DreamBo> getDreamById(@PathVariable("dreamId") Integer dreamId) {
+        return GlobalResult.of(dreamService.getDreamById(dreamId));
+    }
+
     @PostMapping("dream/{dreamId}/pic")
     public GlobalResult<Integer> uploadDreamPic(MultipartFile file, @PathVariable(name = "dreamId") Integer dreamId) {
         return GlobalResult.of(dreamService.uploadPic(dreamId, file));

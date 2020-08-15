@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.neil.cashbook.bo.DreamBo;
@@ -81,8 +82,14 @@ public class DreamServiceImpl implements DreamService {
         dream.setDeadline(dreamBo.getDeadline());
         if (dreamBo.isComeTrue()) {
             Assert.notNull(dreamBo.getComeTrueDate(), "心愿实现日期不能为空");
+            BigDecimal actCost = BigDecimalUtil.toBigDecimal(dreamBo.getActCost());
+            if (actCost == null) {
+                throw new BizException("预估花费不正确");
+            }
             dream.setComeTrueDate(dreamBo.getComeTrueDate());
+            dream.setActCost(actCost);
             dream.setNotes(dreamBo.getNotes());
+            cashService.updateCost(dreamBo.getComeTrueDate(), actCost);
         }
         dream.setEntryDatetime(LocalDateTime.now());
         dream.setEntryUser(userService.getCurrentUser());
@@ -125,6 +132,10 @@ public class DreamServiceImpl implements DreamService {
     @Transactional
     public void deleteDream(Integer id) {
         Dream dream = dreamRepository.findById(id).orElseThrow(() -> new BizException("心愿不存在"));
+        Set<String> picKeys = dream.getPics().stream().map(DreamPic::getCosKey).collect(Collectors.toSet());
+        picKeys.addAll(dream.getPics().stream().map(DreamPic::getCosKeySmall).collect(Collectors.toSet()));
+        picKeys.forEach(key -> cosService.deleteObject(key));
+        dreamPicRepository.deleteAll(dream.getPics());
         dreamRepository.delete(dream);
     }
 
@@ -154,6 +165,12 @@ public class DreamServiceImpl implements DreamService {
         if (!Objects.equals(dreamPic.getCosKey(), dreamPic.getCosKeySmall())) {
             cosService.deleteObject(dreamPic.getCosKeySmall());
         }
+    }
+
+    @Override
+    public DreamBo getDreamById(Integer dreamId) {
+        Dream dream = dreamRepository.findById(dreamId).orElseThrow(() -> new BizException("心愿不存在"));
+        return toDreamBo(dream);
     }
 
     private DreamBo toDreamBo(Dream dream) {

@@ -25,4 +25,6 @@ public interface CashService {
     BigDecimal getRemain();
 
     CashBo getCashHeaderToday();
+
+    void updateCost(LocalDate date, BigDecimal cost);
 }

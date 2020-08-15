@@ -6,7 +6,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ import com.neil.cashbook.enums.CashType;
 import com.neil.cashbook.exception.BizException;
 import com.neil.cashbook.util.BigDecimalUtil;
 import com.neil.cashbook.util.DateUtil;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,10 +96,7 @@ public class CashServiceImpl implements CashService {
         if (date == null) {
             throw new BizException("请指定日期");
         }
-        CashHeader cashHeader = cashHeaderRepository.findByCashDate(DateUtil.toDate(date));
-        if (cashHeader == null) {
-            throw new BizException("这天没有消费");
-        }
+        CashHeader cashHeader = getOrCreateHeader(date);
         CashBo cashBo = new CashBo();
         cashBo.setHeaderId(cashHeader.getId());
         cashBo.setQuota(cashHeader.getQuota());
@@ -202,14 +197,15 @@ public class CashServiceImpl implements CashService {
     @Override
     public CashBo getCashHeaderToday() {
         LocalDate today = LocalDate.now();
-        CashHeader header = cashHeaderRepository.findByCashDate(DateUtil.toDate(today));
-        if (header == null) {
-            header = new CashHeader();
-            header.setCashDate(Date.from(today.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-            header.setQuota(quotaService.getQuota());
-            header.setCost(BigDecimal.ZERO);
-            cashHeaderRepository.save(header);
-        }
+        CashHeader header = getOrCreateHeader(today);
         return toCashBo(header);
+    }
+
+    @Override
+    @Transactional
+    public void updateCost(LocalDate date, BigDecimal cost) {
+        CashHeader header = getOrCreateHeader(date);
+        header.setCost(header.getCost().add(cost));
+        cashHeaderRepository.save(header);
     }
 }

@@ -22,4 +22,6 @@ public interface DreamService {
     List<DreamBo> getDreams(DreamType type);
 
     void deletePic(Integer picId);
+
+    DreamBo getDreamById(Integer dreamId);
 }
