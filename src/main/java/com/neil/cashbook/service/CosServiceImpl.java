@@ -74,7 +74,7 @@ public class CosServiceImpl implements CosService {
         }
         try {
             cosClient.putObject(bucketName, fillKey.toString(), inputStream, metadata);
-            return photoKey;
+            return prefix + "/" + photoKey;
         } catch (CosClientException e) {
             throw new BizException("文件上传失败", e);
         }

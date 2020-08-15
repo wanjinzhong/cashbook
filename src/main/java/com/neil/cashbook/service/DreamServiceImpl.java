@@ -190,7 +190,7 @@ public class DreamServiceImpl implements DreamService {
             picBo.setDreamId(dream.getId());
             picBo.setPicId(pic.getId());
             picBo.setUrlSmall(cosService.generatePresignedUrl(pic.getCosKeySmall()));
-            picBo.setUrlSmall(cosService.generatePresignedUrl(pic.getCosKey()));
+            picBo.setUrl(cosService.generatePresignedUrl(pic.getCosKey()));
             return picBo;
         }).collect(Collectors.toList()));
         return dreamBo;
