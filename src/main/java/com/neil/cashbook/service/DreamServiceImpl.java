@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Lists;
 import com.neil.cashbook.bo.DreamBo;
 import com.neil.cashbook.bo.DreamPicBo;
 import com.neil.cashbook.bo.EditDreamBo;
@@ -76,10 +77,11 @@ public class DreamServiceImpl implements DreamService {
         if (cost == null) {
             throw new BizException("预估花费不正确");
         }
-        if (dreamBo.getDeadline() != null && dreamBo.getDeadline().isBefore(LocalDate.now())) {
-            throw new BizException("截止时间不正确");
-        }
         dream.setDeadline(dreamBo.getDeadline());
+        dream.setOwner(Lists.newArrayList(1, 2).contains(dreamBo.getOwnerId()) ? dreamBo.getOwnerId() : null);
+        if (dream.getComeTrueDate() != null && ((!dreamBo.isComeTrue()) || !Objects.equals(dream.getComeTrueDate(), dreamBo.getComeTrueDate()))) {
+            cashService.updateCost(dream.getComeTrueDate(), dream.getActCost().multiply(new BigDecimal(-1)));
+        }
         if (dreamBo.isComeTrue()) {
             Assert.notNull(dreamBo.getComeTrueDate(), "心愿实现日期不能为空");
             BigDecimal actCost = BigDecimalUtil.toBigDecimal(dreamBo.getActCost());
@@ -90,11 +92,14 @@ public class DreamServiceImpl implements DreamService {
             dream.setActCost(actCost);
             dream.setNotes(dreamBo.getNotes());
             cashService.updateCost(dreamBo.getComeTrueDate(), actCost);
+        } else {
+            dream.setComeTrueDate(null);
         }
         dream.setEntryDatetime(LocalDateTime.now());
         dream.setEntryUser(userService.getCurrentUser());
         dream.setExpCost(cost);
         dream.setTitle(dreamBo.getTitle());
+        dreamRepository.save(dream);
     }
 
     @Override
@@ -165,12 +170,18 @@ public class DreamServiceImpl implements DreamService {
         if (!Objects.equals(dreamPic.getCosKey(), dreamPic.getCosKeySmall())) {
             cosService.deleteObject(dreamPic.getCosKeySmall());
         }
+        dreamPicRepository.delete(dreamPic);
     }
 
     @Override
     public DreamBo getDreamById(Integer dreamId) {
         Dream dream = dreamRepository.findById(dreamId).orElseThrow(() -> new BizException("心愿不存在"));
         return toDreamBo(dream);
+    }
+
+    @Override
+    public List<DreamPicBo> getDreamPic(Integer dreamId) {
+        return getDreamById(dreamId).getPics();
     }
 
     private DreamBo toDreamBo(Dream dream) {
@@ -185,14 +196,16 @@ public class DreamServiceImpl implements DreamService {
         dreamBo.setEntryUser(dream.getEntryUser().getName());
         dreamBo.setExpCost(dream.getExpCost());
         dreamBo.setTitle(dream.getTitle());
-        dreamBo.setPics(dream.getPics().stream().map(pic -> {
-            DreamPicBo picBo = new DreamPicBo();
-            picBo.setDreamId(dream.getId());
-            picBo.setPicId(pic.getId());
-            picBo.setUrlSmall(cosService.generatePresignedUrl(pic.getCosKeySmall()));
-            picBo.setUrl(cosService.generatePresignedUrl(pic.getCosKey()));
-            return picBo;
-        }).collect(Collectors.toList()));
+        dreamBo.setPics(dream.getPics().stream().map(this::toDreamPicBo).collect(Collectors.toList()));
         return dreamBo;
+    }
+
+    private DreamPicBo toDreamPicBo(DreamPic pic) {
+        DreamPicBo picBo = new DreamPicBo();
+        picBo.setDreamId(pic.getDream().getId());
+        picBo.setPicId(pic.getId());
+        picBo.setUrlSmall(cosService.generatePresignedUrl(pic.getCosKeySmall()));
+        picBo.setUrl(cosService.generatePresignedUrl(pic.getCosKey()));
+        return picBo;
     }
 }

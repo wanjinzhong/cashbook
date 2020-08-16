@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.neil.cashbook.auth.AuthRequired;
 import com.neil.cashbook.bo.DreamBo;
+import com.neil.cashbook.bo.DreamPicBo;
 import com.neil.cashbook.bo.EditDreamBo;
 import com.neil.cashbook.bo.GlobalResult;
 import com.neil.cashbook.enums.CommonStatus;
@@ -71,5 +72,10 @@ public class DreamApi {
     @DeleteMapping("dream/pic/{picId}")
     public void deleteDreamPic(@PathVariable(name = "picId") Integer picId) {
         dreamService.deletePic(picId);
+    }
+
+    @GetMapping("dream/{dreamId}/pic")
+    public GlobalResult<List<DreamPicBo>> getDreamPic(@PathVariable(name = "dreamId") Integer dreamId) {
+        return GlobalResult.of(dreamService.getDreamPic(dreamId));
     }
 }

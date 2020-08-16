@@ -2,6 +2,7 @@ package com.neil.cashbook.service;
 import java.util.List;
 
 import com.neil.cashbook.bo.DreamBo;
+import com.neil.cashbook.bo.DreamPicBo;
 import com.neil.cashbook.bo.EditDreamBo;
 import com.neil.cashbook.enums.DreamType;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,4 +25,6 @@ public interface DreamService {
     void deletePic(Integer picId);
 
     DreamBo getDreamById(Integer dreamId);
+
+    List<DreamPicBo> getDreamPic(Integer dreamId);
 }
