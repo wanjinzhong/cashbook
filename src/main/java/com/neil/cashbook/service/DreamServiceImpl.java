@@ -127,10 +127,7 @@ public class DreamServiceImpl implements DreamService {
         BigDecimal actCost = dream.getActCost();
         dream.setComeTrueDate(null);
         dreamRepository.save(dream);
-        CashHeader cashHeader = cashService.getOrCreateHeader(date);
-        BigDecimal originCost = cashHeader.getCost() == null ? BigDecimal.ZERO : cashHeader.getCost();
-        cashHeader.setCost(originCost.subtract(actCost));
-        cashHeaderRepository.save(cashHeader);
+        cashService.updateCost(date, actCost.multiply(new BigDecimal(-1)));
     }
 
     @Override
