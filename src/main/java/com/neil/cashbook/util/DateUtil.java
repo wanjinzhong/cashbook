@@ -5,16 +5,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import com.neil.cashbook.exception.BizException;
+import org.apache.commons.lang.StringUtils;
 
 public class DateUtil {
     private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static DateTimeFormatter FORMATTER_ZH = DateTimeFormatter.ofPattern("yyyy年MM月dd日");
+    private static DateTimeFormatter FORMATTER_NO_DAY = DateTimeFormatter.ofPattern("yyyy-MM");
 
     public static Date toDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public static LocalDate toLocalDate(String date) {
+        if (StringUtils.isBlank(date)) {
+            return null;
+        }
         try {
             return LocalDate.parse(date, FORMATTER);
         } catch (Exception e) {
@@ -29,7 +33,11 @@ public class DateUtil {
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
-    public static String toZhString(LocalDate date) {
-        return date.format(FORMATTER_ZH);
+    public static String toString(LocalDate date) {
+        return date.format(FORMATTER);
+    }
+
+    public static String toStringWithoutDay(LocalDate date) {
+        return date.format(FORMATTER_NO_DAY);
     }
 }

@@ -18,6 +18,6 @@ public interface CashHeaderRepository extends JpaRepository<CashHeader, Integer>
     @Query("select header from CashHeader header where header.cashDate between :fromDate and :toDate order by header.cashDate desc")
     List<CashHeader> findByDateRange(@Param("fromDate") Date from, @Param("toDate") Date to);
 
-    @Query("select sum(header.quota) - sum(header.cost) from CashHeader header")
-    BigDecimal findRemain();
+    @Query("select sum(header.quota) - sum(header.cost) from CashHeader header where header.cashDate <= :date")
+    BigDecimal findRemain(Date date);
 }

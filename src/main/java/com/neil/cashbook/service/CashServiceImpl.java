@@ -1,12 +1,13 @@
 package com.neil.cashbook.service;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -101,7 +102,7 @@ public class CashServiceImpl implements CashService {
         cashBo.setHeaderId(cashHeader.getId());
         cashBo.setQuota(cashHeader.getQuota());
         cashBo.setCost(cashHeader.getCost());
-        cashBo.setDate(cashHeader.getDate());
+        cashBo.setDate(DateUtil.toString(cashHeader.getDate()));
         cashBo.setCashDetail(cashHeader.getDetails().stream().map(detail -> {
             CashDetailBo cashDetailBo = new CashDetailBo();
             cashDetailBo.setType(CashType.CASH);
@@ -157,7 +158,7 @@ public class CashServiceImpl implements CashService {
     public AnalyzeBo getCashHeaderGroupByDay(LocalDate from, LocalDate to) {
         List<CashHeader> headers = cashHeaderRepository.findByDateRange(DateUtil.toDate(from), DateUtil.toDate(to));
         AnalyzeBo analyzeBo = new AnalyzeBo();
-        analyzeBo.setDateRange(DateUtil.toZhString(from) + " - " + DateUtil.toZhString(to));
+        analyzeBo.setDateRange(DateUtil.toString(from) + " ~ " + DateUtil.toString(to));
         analyzeBo.setCost(headers.stream().map(CashHeader::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
         analyzeBo.setQuota(headers.stream().map(CashHeader::getQuota).reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
         analyzeBo.setCashes(headers.stream().map(this::toCashBo).collect(Collectors.toList()));
@@ -167,16 +168,20 @@ public class CashServiceImpl implements CashService {
     public AnalyzeBo getCashHeaderGroupByMonth(LocalDate from, LocalDate to) {
         List<CashHeader> headers = cashHeaderRepository.findByDateRange(DateUtil.toDate(from), DateUtil.toDate(to));
         AnalyzeBo analyzeBo = new AnalyzeBo();
-        analyzeBo.setDateRange(DateUtil.toZhString(from) + " - " + DateUtil.toZhString(to));
+        analyzeBo.setDateRange(DateUtil.toString(from) + " ~ " + DateUtil.toString(to));
+        analyzeBo.setQuota(headers.stream().map(CashHeader::getQuota).reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
         analyzeBo.setCost(headers.stream().map(CashHeader::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
         Map<LocalDate, List<CashHeader>> grouped = headers.stream().collect(Collectors.groupingBy(h -> h.getDate().with(TemporalAdjusters.firstDayOfMonth())));
+        List<CashBo> cashBos = new ArrayList<>();
         grouped.forEach((k, v) -> {
             CashBo cashBo = new CashBo();
-            cashBo.setDateRange(
-                DateUtil.toZhString(k.with(TemporalAdjusters.firstDayOfMonth())) + " - " + DateUtil.toZhString(k.with(TemporalAdjusters.lastDayOfMonth())));
-            analyzeBo.setCost(v.stream().map(CashHeader::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
-            analyzeBo.setQuota(v.stream().map(CashHeader::getQuota).reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
+            cashBo.setDate(
+                DateUtil.toStringWithoutDay(k));
+            cashBo.setCost(v.stream().map(CashHeader::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
+            cashBo.setQuota(v.stream().map(CashHeader::getQuota).reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
+            cashBos.add(cashBo);
         });
+        analyzeBo.setCashes(cashBos);
         return analyzeBo;
     }
 
@@ -185,13 +190,13 @@ public class CashServiceImpl implements CashService {
         cashBo.setHeaderId(header.getId());
         cashBo.setQuota(header.getQuota());
         cashBo.setCost(header.getCost());
-        cashBo.setDate(header.getDate());
+        cashBo.setDate(DateUtil.toString(header.getDate()));
         return cashBo;
     }
 
     @Override
     public BigDecimal getRemain() {
-        return cashHeaderRepository.findRemain();
+        return cashHeaderRepository.findRemain(new Date());
     }
 
     @Override

@@ -1,6 +1,9 @@
 package com.neil.cashbook.controller;
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.neil.cashbook.auth.AuthRequired;
 import com.neil.cashbook.bo.AnalyzeBo;
 import com.neil.cashbook.bo.GlobalResult;
@@ -22,8 +25,13 @@ public class AnalyzeApi {
     private CashService cashService;
 
     @GetMapping("cashHeader")
-    public GlobalResult<AnalyzeBo> getCashHeaderByRange(@RequestParam CashRange range, @RequestParam(required = false) Integer weekAgo, @RequestParam String date) {
+    public GlobalResult<AnalyzeBo> getCashHeaderByRange(@RequestParam CashRange range, @RequestParam(required = false) Integer weekAgo, @RequestParam(required = false) String date) {
+        date = date.replace(",", "");
+        if (Pattern.compile("^\\d{4}$").matcher(date).find()) {
+            date += "-01-01";
+        } else if (Pattern.compile("^\\d{4}-\\d{2}$").matcher(date).find()) {
+            date = date + "-01";
+        }
         return GlobalResult.of(cashService.getCashHeaderByRange(range, weekAgo, DateUtil.toLocalDate(date)));
     }
-
 }
