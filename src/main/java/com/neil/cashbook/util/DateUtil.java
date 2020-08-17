@@ -40,4 +40,8 @@ public class DateUtil {
     public static String toStringWithoutDay(LocalDate date) {
         return date.format(FORMATTER_NO_DAY);
     }
+
+    public static LocalDate min(LocalDate d1, LocalDate d2) {
+        return d1.isBefore(d2) ? d1 : d2;
+    }
 }

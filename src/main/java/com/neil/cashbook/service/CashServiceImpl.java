@@ -140,15 +140,15 @@ public class CashServiceImpl implements CashService {
             case BY_WEEK:
                 LocalDate now = LocalDate.now();
                 from = now.with(DayOfWeek.MONDAY).minusDays(7 * weekAgo);
-                to = now.with(DayOfWeek.SUNDAY).minusDays(7 * weekAgo);
+                to = DateUtil.min(now.with(DayOfWeek.SUNDAY).minusDays(7 * weekAgo), LocalDate.now());
                 return getCashHeaderGroupByDay(from, to);
             case BY_MONTH:
                 from = date.with(TemporalAdjusters.firstDayOfMonth());
-                to = date.with(TemporalAdjusters.lastDayOfMonth());
+                to = DateUtil.min(date.with(TemporalAdjusters.lastDayOfMonth()), LocalDate.now());
                 return getCashHeaderGroupByDay(from, to);
             case BY_YEAR:
                 from = date.with(TemporalAdjusters.firstDayOfYear());
-                to = date.with(TemporalAdjusters.lastDayOfYear());
+                to = DateUtil.min(date.with(TemporalAdjusters.lastDayOfYear()), LocalDate.now());
                 return getCashHeaderGroupByMonth(from, to);
             default:
                 return new AnalyzeBo();
