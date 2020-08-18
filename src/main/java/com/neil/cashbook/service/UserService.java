@@ -5,7 +5,6 @@ import com.neil.cashbook.bo.UserBo;
 import com.neil.cashbook.dao.entity.User;
 
 public interface UserService {
-    boolean isOpenIdExist(String openId);
 
     void saveUser(String openId, String name, String avatar);
 
@@ -14,4 +13,6 @@ public interface UserService {
     void updateUserAllowEntry(String openId, boolean entry);
 
     List<UserBo> getUsers();
+
+    void deleteUser(String openId);
 }

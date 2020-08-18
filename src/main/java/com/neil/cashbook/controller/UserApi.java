@@ -16,6 +16,7 @@ import com.neil.cashbook.service.WechatServiceImpl;
 import com.neil.cashbook.util.JwtUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,6 +59,13 @@ public class UserApi {
     @AuthRequired
     public GlobalResult<CommonStatus> updateUserEntry(@PathVariable("openId") String openId, @RequestParam("entry") boolean entry) {
         userService.updateUserAllowEntry(openId, entry);
+        return GlobalResult.of(CommonStatus.SUCCESS);
+    }
+
+    @DeleteMapping("user/{openId}")
+    @AuthRequired
+    public GlobalResult<CommonStatus> deleteUser(@PathVariable("openId") String openId) {
+        userService.deleteUser(openId);
         return GlobalResult.of(CommonStatus.SUCCESS);
     }
 

@@ -24,14 +24,6 @@ public class UserServiceImpl implements UserService {
     private WebContext webContext;
 
     @Override
-    public boolean isOpenIdExist(String openId) {
-        if (openId == null) {
-            throw new RuntimeException("Open Id 未指定");
-        }
-        return userRepository.findByOpenId(openId) != null;
-    }
-
-    @Override
     @Transactional
     public void saveUser(String openId, String name, String avatar) {
         User user = userRepository.findByOpenId(openId);
@@ -67,6 +59,17 @@ public class UserServiceImpl implements UserService {
     public List<UserBo> getUsers() {
         List<User> users = userRepository.findAll();
         return users.stream().map(this::toUserBo).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteUser(String openId) {
+        User user = userRepository.findByOpenId(openId);
+        if (user != null) {
+            if (user.getId().equals(webContext.getUser().getId())) {
+                throw new BizException("不能修改自己的权限");
+            }
+            userRepository.delete(user);
+        }
     }
 
     private UserBo toUserBo(User user) {
